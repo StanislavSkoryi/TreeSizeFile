@@ -1,0 +1,46 @@
+﻿<Window x:Class="WPFApp.DiskDetailsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:loc="clr-namespace:WPFApp"
+        Title="Disk Details" Height="800" Width="900">
+    <Window.Resources>
+        <loc:IndentCalculator x:Key="IndentCalculator"/>
+    </Window.Resources>
+    <Grid>
+        <TreeView Name="trvStructure"
+                  HorizontalContentAlignment="Stretch"
+                  HorizontalAlignment="Stretch"
+                  TreeViewItem.Expanded="TreeViewItem_Expanded" 
+                  ItemsSource="{Binding trvStructure}">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Path=Children}">
+                    <Grid HorizontalAlignment="Stretch">
+                        <Grid.Width>
+                            <MultiBinding Converter="{StaticResource IndentCalculator}" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                                <MultiBinding.Bindings>
+                                    <Binding ElementName="trvStructure" Path="ActualWidth"/>
+                                    <Binding Path="."/>
+                                </MultiBinding.Bindings>
+                            </MultiBinding>
+                        </Grid.Width>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="100"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="{Binding Path=Name}" Grid.Column="0" HorizontalAlignment="Left"/>
+                        <TextBlock Text="{Binding Path=ConvertedSize}" Grid.Column="1" HorizontalAlignment="Center"/>
+                        <ProgressBar Maximum="100" Value="{Binding Path=AllowedPTG, Mode=OneWay}" Grid.Column="2" HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                        <TextBlock Text="{Binding Path=AllowedPTG, StringFormat='\{0\} %'}" Grid.Column="2" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding Path=ProgressMessage}" Grid.Column="3" HorizontalAlignment="Center"/>
+                    </Grid>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+    </Grid>
+</Window>
+
